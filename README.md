@@ -79,8 +79,8 @@ node chaos-seed/bin/spiral.mjs memory
 node chaos-seed/bin/spiral.mjs remember "ship it" follows "run the tests" --evidence e-…,e-…
 ```
 
-- Volume trigger: every 13 prompts by default (`SPIRAL_REFLECT_EVERY`).
-- Variation checks: at prompts 4, 7 and 11, between the stages of growth, the hook asks what varied.
+- Volume trigger: every 14 prompts by default (`SPIRAL_REFLECT_EVERY`).
+- Variation checks: at prompts 2, 6 and 8, between the stages of growth, the hook asks what varied.
 - The hook never blocks: on any error it exits 0 silently (`SPIRAL_DEBUG=1` to see why).
 - Add `.spiral/journal.jsonl` to `.gitignore` if your prompts are private.
 
