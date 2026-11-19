@@ -2,9 +2,9 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 
 from behave import step
-from chaos_seed.formats import render_frontmatter
-from chaos_seed.spiral import COUNTER, MOMENT
-from python_workspace import PYTHON_ROOT
+from src.py.formats import render_frontmatter
+from src.py.spiral import COUNTER, MOMENT
+from python_workspace import ROOT
 
 
 @step("this prompt history:")
@@ -129,11 +129,11 @@ def abandon_lock(context):
     script = (
         "import os, sys\n"
         "sys.path.insert(0, sys.argv[1])\n"
-        "from chaos_seed.workspace import Workspace\n"
+        "from src.py.workspace import Workspace\n"
         "with Workspace(os.getcwd()).mutation():\n"
         "    os._exit(0)\n"
     )
-    result = context.project.run("-c", script, str(PYTHON_ROOT))
+    result = context.project.run("-c", script, str(ROOT))
     assert result.returncode == 0, result.stderr
     assert result.stdout == "", result.stdout
 

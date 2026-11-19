@@ -2,7 +2,7 @@ import json
 import re
 
 from behave import step
-from chaos_seed import contract, formats, growth, spiral
+from src.py import contract, formats, growth, spiral
 from python_workspace import ROOT, external_imports
 
 

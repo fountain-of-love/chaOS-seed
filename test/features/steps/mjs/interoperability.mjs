@@ -6,8 +6,8 @@ const runtimes = {
   node: nodeRuntime,
   python: {
     executable: process.env.PYTHON || "python3",
-    cli: "python/spiral.py",
-    hook: "python/spiral_hook.py",
+    cli: "bin/spiral.py",
+    hook: "hooks/spiral-hook.py",
     env: { PYTHONIOENCODING: "utf-8" },
   },
 };

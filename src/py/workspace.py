@@ -1,6 +1,5 @@
 """Filesystem adapter for the shared .spiral workspace."""
 
-from contextlib import contextmanager
 from datetime import datetime, timezone
 import os
 from pathlib import Path
@@ -10,6 +9,7 @@ from tempfile import NamedTemporaryFile
 
 from .contract import STATE_KEY, validate_event, validate_relation, validate_state
 from .formats import dump_json, load_json, parse_dot, parse_frontmatter, render_dot, render_frontmatter
+from .mutation import workspace_mutation
 
 
 STATE_TEMPLATE = Path(__file__).resolve().parents[2] / "templates" / "state.mdx"
@@ -84,21 +84,9 @@ class Workspace:
         self.memory_path = self.directory / "memory.dot"
         self._now = now
 
-    @contextmanager
     def mutation(self):
         """Serialize Python writers across processes sharing this workspace."""
-        self.directory.mkdir(parents=True, exist_ok=True)
-        with (self.directory / ".python.lock").open("a+b") as lock:
-            if os.name == "nt":
-                import msvcrt
-
-                lock.seek(0)
-                msvcrt.locking(lock.fileno(), msvcrt.LK_LOCK, 1)
-            else:
-                import fcntl
-
-                fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
-            yield
+        return workspace_mutation(self.directory)
 
     def _reject(self, kind, record, errors):
         _append_json(self.directory / "rejected.jsonl", {

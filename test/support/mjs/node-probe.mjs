@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import * as contract from "../../../src/contract.mjs";
-import { parseDot, parseFrontmatter, renderDot, renderFrontmatter } from "../../../src/formats.mjs";
-import { isVariationCheck, ladderStage } from "../../../src/growth.mjs";
-import { buildContext, isReflectionDue, reviewJournal, statedIntent, strengthen } from "../../../src/spiral.mjs";
-import { openWorkspace } from "../../../src/workspace.mjs";
+import * as contract from "../../../src/mjs/contract.mjs";
+import { parseDot, parseFrontmatter, renderDot, renderFrontmatter } from "../../../src/mjs/formats.mjs";
+import { isVariationCheck, ladderStage } from "../../../src/mjs/growth.mjs";
+import { buildContext, isReflectionDue, reviewJournal, statedIntent, strengthen } from "../../../src/mjs/spiral.mjs";
+import { openWorkspace } from "../../../src/mjs/workspace.mjs";
 
 const root = fileURLToPath(new URL("../../..", import.meta.url));
 const workspace = openWorkspace(process.cwd());
@@ -20,7 +20,7 @@ function* sources(directory) {
 
 function externalImports() {
   const violations = [];
-  for (const directory of ["bin", "hooks", "src"]) {
+  for (const directory of ["bin", "hooks", "src/mjs"]) {
     for (const file of sources(path.join(root, directory))) {
       const source = fs.readFileSync(file, "utf8");
       for (const [, name] of source.matchAll(/(?:from\s+|import\s*\(?\s*)["']([^"']+)["']/g)) {

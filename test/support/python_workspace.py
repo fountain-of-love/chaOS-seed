@@ -11,12 +11,12 @@ import subprocess
 import sys
 import sysconfig
 
-from chaos_seed.formats import parse_dot, parse_frontmatter
-from chaos_seed.spiral import COUNTER
-from chaos_seed.workspace import Workspace
+from src.py.formats import parse_dot, parse_frontmatter
+from src.py.spiral import COUNTER
+from src.py.workspace import Workspace
 
 ROOT = Path(__file__).resolve().parents[2]
-PYTHON_ROOT = ROOT / "python"
+PYTHON_SOURCE_ROOT = ROOT / "src" / "py"
 
 
 @dataclass(frozen=True)
@@ -26,15 +26,28 @@ class RuntimeCommands:
     hook: Path
 
 
-PYTHON_COMMANDS = RuntimeCommands(sys.executable, PYTHON_ROOT / "spiral.py", PYTHON_ROOT / "spiral_hook.py")
+PYTHON_COMMANDS = RuntimeCommands(
+    sys.executable,
+    ROOT / "bin" / "spiral.py",
+    ROOT / "hooks" / "spiral-hook.py",
+)
 
 
 def external_imports():
     stdlib = Path(sysconfig.get_path("stdlib"))
     system_paths = [str(stdlib), str(stdlib / "lib-dynload"), str(Path(sys.base_prefix) / "DLLs")]
     violations = []
-    for source in PYTHON_ROOT.rglob("*.py"):
-        package = ".".join(source.parent.relative_to(PYTHON_ROOT).parts)
+    source_root = PYTHON_SOURCE_ROOT.parent
+    sources = [
+        PYTHON_COMMANDS.cli,
+        PYTHON_COMMANDS.hook,
+        source_root / "__init__.py",
+        *PYTHON_SOURCE_ROOT.rglob("*.py"),
+    ]
+    for source in sources:
+        package = ""
+        if source.is_relative_to(source_root):
+            package = ".".join(source.parent.relative_to(ROOT).parts)
         for node in ast.walk(ast.parse(source.read_text(encoding="utf-8"))):
             if isinstance(node, ast.Import):
                 names = [alias.name for alias in node.names]
@@ -44,8 +57,8 @@ def external_imports():
                 continue
             for name in names:
                 top = name.split(".")[0]
-                if top == "chaos_seed":
-                    target = PYTHON_ROOT.joinpath(*name.split("."))
+                if name == "src.py" or name.startswith("src.py."):
+                    target = ROOT.joinpath(*name.split("."))
                     found = target.is_dir() or target.with_suffix(".py").is_file()
                 else:
                     found = (
@@ -53,7 +66,7 @@ def external_imports():
                         or FrozenImporter.find_spec(top) or PathFinder.find_spec(top, system_paths)
                     )
                 if not found:
-                    violations.append(f"{source.relative_to(PYTHON_ROOT)}: {name}")
+                    violations.append(f"{source.relative_to(ROOT)}: {name}")
     return violations
 
 

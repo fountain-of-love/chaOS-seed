@@ -2,10 +2,13 @@
 
 import os
 import sys
+from pathlib import Path
 
-from chaos_seed.formats import dump_json, load_json
-from chaos_seed.spiral import COUNTER, DEFAULT_REFLECT_EVERY, build_context, stated_intent
-from chaos_seed.workspace import Workspace, reflect_every, workspace_root
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.py.formats import dump_json, load_json
+from src.py.spiral import COUNTER, DEFAULT_REFLECT_EVERY, build_context, stated_intent
+from src.py.workspace import Workspace, reflect_every, workspace_root
 
 
 def on_prompt(workspace, payload, every):

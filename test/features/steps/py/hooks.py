@@ -2,8 +2,8 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 
 from behave import step
-from chaos_seed.formats import render_frontmatter
-from chaos_seed.spiral import COUNTER
+from src.py.formats import render_frontmatter
+from src.py.spiral import COUNTER
 
 
 def hook_response(result):

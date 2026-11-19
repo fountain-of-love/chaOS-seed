@@ -1,11 +1,14 @@
 """Run the chaOS seed command-line interface."""
 
 import sys
+from pathlib import Path
 
-from chaos_seed.contract import validate_relation
-from chaos_seed.growth import NOTICED_WEIGHT, ladder_stage
-from chaos_seed.spiral import COUNTER, DEFAULT_REFLECT_EVERY, MOMENT, describe_relation, review_journal, strengthen
-from chaos_seed.workspace import InvalidMemoryError, Workspace, reflect_every, workspace_root
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.py.contract import validate_relation
+from src.py.growth import NOTICED_WEIGHT, ladder_stage
+from src.py.spiral import COUNTER, DEFAULT_REFLECT_EVERY, MOMENT, describe_relation, review_journal, strengthen
+from src.py.workspace import InvalidMemoryError, Workspace, reflect_every, workspace_root
 
 
 class UsageError(ValueError):

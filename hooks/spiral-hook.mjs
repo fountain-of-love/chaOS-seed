@@ -2,8 +2,8 @@
 // One hook for Claude Code and Codex. Usage: spiral-hook.mjs <UserPromptSubmit|Stop>
 // It reads the host's JSON payload on stdin. It always exits 0: the spiral may help,
 // it must never block the person.
-import { buildContext, DEFAULT_REFLECT_EVERY, statedIntent } from "../src/spiral.mjs";
-import { openWorkspace, reflectEvery, workspaceRoot } from "../src/workspace.mjs";
+import { buildContext, DEFAULT_REFLECT_EVERY, statedIntent } from "../src/mjs/spiral.mjs";
+import { openWorkspace, reflectEvery, workspaceRoot } from "../src/mjs/workspace.mjs";
 
 const COUNTER = "promptsSinceReflection";
 

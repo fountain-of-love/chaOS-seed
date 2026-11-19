@@ -1,7 +1,8 @@
 # The contract
 
-Each record has required elements; any extra field is allowed and kept. [src/contract.mjs](src/contract.mjs)
-enforces this page, and a test keeps the two in step.
+Each record has required elements. Both runtimes allow and keep extra fields.
+The [Node.js validator](src/mjs/contract.mjs) and [Python validator](src/py/contract.py)
+enforce this page. Shared tests keep the validators in step with the contract.
 
 | Movement | Record | File in `.spiral/` | Required elements |
 |---|---|---|---|

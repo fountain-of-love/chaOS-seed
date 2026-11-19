@@ -41,18 +41,23 @@ standard library. Copy the repository into your project as `chaos-seed/` and
 run the commands from the project root.
 
 ```bash
-python3 chaos-seed/python/spiral.py status
-python3 chaos-seed/python/spiral.py review
-python3 chaos-seed/python/spiral.py reflect
-python3 chaos-seed/python/spiral.py reflected
-python3 chaos-seed/python/spiral.py memory
-python3 chaos-seed/python/spiral.py remember "ship it" follows "run the tests" --evidence e-…,e-…
+python3 chaos-seed/bin/spiral.py status
+python3 chaos-seed/bin/spiral.py review
+python3 chaos-seed/bin/spiral.py reflect
+python3 chaos-seed/bin/spiral.py reflected
+python3 chaos-seed/bin/spiral.py memory
+python3 chaos-seed/bin/spiral.py remember "ship it" follows "run the tests" --evidence e-…,e-…
 ```
 
 For the hook configuration below, replace `node` with `python3` and change the
-script path to `chaos-seed/python/spiral_hook.py`. Keep the
+script path to `chaos-seed/hooks/spiral-hook.py`. Keep the
 `UserPromptSubmit` and `Stop` arguments. When the hook or reflection output
-refers to a `spiral` command, run it through `python3 chaos-seed/python/spiral.py`.
+refers to a `spiral` command, run it through `python3 chaos-seed/bin/spiral.py`.
+If you configured the Python hook before this layout change, point it at
+`chaos-seed/hooks/spiral-hook.py`.
+
+The CLI entry points live in `bin/`, the hook entry points in `hooks/`, and
+the mirrored modules in `src/mjs/` and `src/py/`.
 
 Both versions use the same `.spiral/` files. Use one runtime at a time when
 writing to a project. Each runtime serializes its own writers.
@@ -65,8 +70,8 @@ a scenario. Each runtime is responsible for passing every shared scenario
 with its own test runner and step definitions.
 The bindings live in [`steps/mjs/`](test/features/steps/mjs/) and
 [`steps/py/`](test/features/steps/py/) alongside the feature files.
-Both native suites check their own step directory against the
-[shared module list](test/features/shared/suite_layout.feature).
+Both native suites check their own steps, production modules, and entry points
+against the [shared layout](test/features/shared/suite_layout.feature).
 
 **Node.js** runs its suite with Cucumber.js.
 

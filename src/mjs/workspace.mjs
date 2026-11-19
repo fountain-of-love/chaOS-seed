@@ -6,7 +6,7 @@ import { validateEvent, validateRelation, validateState } from "./contract.mjs";
 import { parseDot, parseFrontmatter, renderDot, renderFrontmatter } from "./formats.mjs";
 import { withWorkspaceMutation } from "./mutation.mjs";
 
-const STATE_TEMPLATE = new URL("../templates/state.mdx", import.meta.url);
+const STATE_TEMPLATE = new URL("../../templates/state.mdx", import.meta.url);
 
 export class InvalidMemoryError extends Error {}
 

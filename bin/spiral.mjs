@@ -7,10 +7,10 @@
 //   spiral memory                             the learned relations, strongest first
 //   spiral remember <from> <type> <to> [--evidence e-1,e-2]
 //                                             strengthen a relation by one
-import { validateRelation } from "../src/contract.mjs";
-import { DEFAULT_REFLECT_EVERY, describeRelation, reviewJournal, strengthen } from "../src/spiral.mjs";
-import { ladderStage } from "../src/growth.mjs";
-import { InvalidMemoryError, openWorkspace, reflectEvery, workspaceRoot } from "../src/workspace.mjs";
+import { validateRelation } from "../src/mjs/contract.mjs";
+import { DEFAULT_REFLECT_EVERY, describeRelation, reviewJournal, strengthen } from "../src/mjs/spiral.mjs";
+import { ladderStage } from "../src/mjs/growth.mjs";
+import { InvalidMemoryError, openWorkspace, reflectEvery, workspaceRoot } from "../src/mjs/workspace.mjs";
 
 // A mistake in how the command was used: reported plainly, never as a stack trace.
 class UsageError extends Error {}
