@@ -1,4 +1,21 @@
+# Local chaOS workspace data
 .spiral/
+
+# Node.js dependencies and npm logs
 node_modules/
+npm-debug.log*
+
+# Python virtual environments and bytecode
+.venv/
+venv/
 __pycache__/
+*.py[cod]
+
+# Generated test output
+/coverage/
+/.coverage
+/.coverage.*
+/progress.output
+
+# macOS
 .DS_Store
