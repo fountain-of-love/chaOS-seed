@@ -10,7 +10,7 @@
 import { validateRelation } from "../src/contract.mjs";
 import { DEFAULT_REFLECT_EVERY, describeRelation, reviewJournal, strengthen } from "../src/spiral.mjs";
 import { ladderStage } from "../src/growth.mjs";
-import { openWorkspace, reflectEvery, workspaceRoot } from "../src/workspace.mjs";
+import { InvalidMemoryError, openWorkspace, reflectEvery, workspaceRoot } from "../src/workspace.mjs";
 
 // A mistake in how the command was used: reported plainly, never as a stack trace.
 class UsageError extends Error {}
@@ -38,17 +38,22 @@ function remember(args) {
   if (!from || !type || !to) throw new UsageError("Use: spiral remember <from> <type> <to> [--evidence e-1,e-2]");
   const shapeErrors = validateRelation({ from, type, to, weight: 1, evidence: [] });
   if (shapeErrors.length > 0) throw new UsageError(`Refused by the contract: ${shapeErrors.join("; ")}`);
-  const flag = args.indexOf("--evidence");
-  let evidence = flag >= 0 ? String(args[flag + 1] || "").split(",").filter(Boolean) : [];
-  if (evidence.length === 0) {
-    const event = workspace.appendEvent({ type: "remember", role: "tool", data: { from, type, to } });
-    if (!event) throw new UsageError("The remember event was refused; see .spiral/rejected.jsonl.");
-    evidence = [event.id];
-  }
-  const errors = workspace.writeRelations(strengthen(workspace.readRelations(), { from, type, to }, ...evidence));
-  if (errors.length > 0) throw new UsageError(`Refused by the contract: ${errors.join("; ")}`);
-  const relation = workspace.readRelations().find((r) => r.from === from && r.type === type && r.to === to);
-  return `${describeRelation(relation)}: weight ${relation.weight} (${ladderStage(relation.weight)}).`;
+  const flag = args.indexOf("--evidence", 3);
+  const cited = flag >= 0 ? String(args[flag + 1] || "").split(",").filter(Boolean) : [];
+  return workspace.mutation(() => {
+    const relations = workspace.readRelations({ strict: true });
+    const evidence = [...cited];
+    if (evidence.length === 0) {
+      const event = workspace.appendEvent({ type: "remember", role: "tool", data: { from, type, to } });
+      if (!event) throw new UsageError("The remember event was refused; see .spiral/rejected.jsonl.");
+      evidence.push(event.id);
+    }
+    const updated = strengthen(relations, { from, type, to }, ...evidence);
+    const errors = workspace.writeRelations(updated);
+    if (errors.length > 0) throw new UsageError(`Refused by the contract: ${errors.join("; ")}`);
+    const relation = updated.find((r) => r.from === from && r.type === type && r.to === to);
+    return `${describeRelation(relation)}: weight ${relation.weight} (${ladderStage(relation.weight)}).`;
+  });
 }
 
 const commands = {
@@ -73,13 +78,15 @@ const commands = {
       "Then run `spiral reflected`.",
     ].join("\n"),
 
-  reflected: () => {
+  reflected: () => workspace.mutation(() => {
     const event = workspace.appendEvent({ type: "reflection", role: "tool", data: {} });
     if (!event) throw new UsageError("The reflection event was refused; see .spiral/rejected.jsonl.");
-    workspace.writeState(COUNTER, 0, event.id);
-    workspace.writeState(MOMENT, event.at, event.id);
+    for (const [key, value] of [[COUNTER, 0], [MOMENT, event.at]]) {
+      const errors = workspace.writeState(key, value, event.id);
+      if (errors.length > 0) throw new UsageError(`Unable to update ${key}: ${errors.join("; ")}`);
+    }
     return "Reflection marked. The counter starts again.";
-  },
+  }),
 
   memory: () => {
     const relations = [...workspace.readRelations()].sort((a, b) => b.weight - a.weight);
@@ -99,7 +106,7 @@ if (!command) {
 try {
   process.stdout.write(command() + "\n");
 } catch (error) {
-  if (!(error instanceof UsageError)) throw error;
+  if (!(error instanceof UsageError || error instanceof InvalidMemoryError || error.code)) throw error;
   process.stderr.write(error.message + "\n");
   process.exit(1);
 }

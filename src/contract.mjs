@@ -16,6 +16,7 @@ const RELATION_TYPE = /^[a-z][a-z0-9_-]*$/;
 
 const isObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const isText = (value) => typeof value === "string" && value.trim() !== "";
+const isRelationLabel = (value) => isText(value) && !/[\r\n]/.test(value);
 
 function check(record, fields, rules) {
   if (!isObject(record)) return ["not an object"];
@@ -47,9 +48,9 @@ export function validateState(state) {
 
 export function validateRelation(relation) {
   return check(relation, RELATION_FIELDS, [
-    ["from", isText, "must be a non-empty string"],
+    ["from", isRelationLabel, "must be a non-empty, single-line string"],
     ["type", (v) => RELATION_TYPE.test(String(v)), "must be a lowercase verb such as follows or prefers"],
-    ["to", isText, "must be a non-empty string"],
+    ["to", isRelationLabel, "must be a non-empty, single-line string"],
     ["weight", Number.isFinite, "must be a number"],
     ["evidence", (v) => Array.isArray(v) && v.every((id) => EVENT_ID.test(String(id))), "must be a list of event ids"],
   ]);

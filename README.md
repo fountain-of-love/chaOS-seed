@@ -34,6 +34,38 @@ Each record type has required elements; see [CONTRACT.md](CONTRACT.md).
 
 No dependencies; Node 20 or later.
 
+## Python version
+
+The same hook and CLI are available in Python 3.9 or later, using only the
+standard library. Copy the repository into your project as `chaos-seed/` and
+run the commands from the project root.
+
+```bash
+python3 chaos-seed/python/spiral.py status
+python3 chaos-seed/python/spiral.py review
+python3 chaos-seed/python/spiral.py reflect
+python3 chaos-seed/python/spiral.py reflected
+python3 chaos-seed/python/spiral.py memory
+python3 chaos-seed/python/spiral.py remember "ship it" follows "run the tests" --evidence e-…,e-…
+```
+
+For the hook configuration below, replace `node` with `python3` and change the
+script path to `chaos-seed/python/spiral_hook.py`. Keep the
+`UserPromptSubmit` and `Stop` arguments. When the hook or reflection output
+refers to a `spiral` command, run it through `python3 chaos-seed/python/spiral.py`.
+
+Both versions use the same `.spiral/` files. Use one runtime at a time when
+writing to a project. Each runtime serializes its own writers.
+
+The native suites cover the same scenarios and run independently. The
+interoperability test requires both runtimes.
+
+```bash
+npm test
+python3 -m unittest discover -s test -p 'test_python_*.py'
+python3 -m unittest discover -s test -p 'test_interop.py'
+```
+
 ## Where does it's name come from?
 
 chaOS
@@ -76,8 +108,8 @@ node chaos-seed/bin/spiral.mjs memory
 node chaos-seed/bin/spiral.mjs remember "ship it" follows "run the tests" --evidence e-…,e-…
 ```
 
-- Volume trigger: every 13 prompts by default (`SPIRAL_REFLECT_EVERY`).
-- Variation checks: at prompts 4, 7 and 11, between the stages of growth, the hook asks what varied.
+- Volume trigger: every 14 prompts by default (`SPIRAL_REFLECT_EVERY`).
+- Variation checks: at prompts 2, 6, 8, 14 and subsequent counts where each is the sum of the two before it, the hook asks what varied.
 - The hook never blocks: on any error it exits 0 silently (`SPIRAL_DEBUG=1` to see why).
 - Add `.spiral/journal.jsonl` to `.gitignore` if your prompts are private.
 

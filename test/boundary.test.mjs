@@ -15,7 +15,7 @@ function sources(dir) {
   });
 }
 
-test("the seed imports nothing outside itself and only node built-ins", () => {
+test("the seed imports nothing outside itself and only standard library modules", () => {
   for (const file of sources(root)) {
     const text = fs.readFileSync(file, "utf8");
     for (const [, spec] of text.matchAll(/(?:from\s+|import\s*\(?\s*)["']([^"']+)["']/g)) {

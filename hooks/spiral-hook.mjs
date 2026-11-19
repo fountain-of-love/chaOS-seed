@@ -19,17 +19,22 @@ function readStdin() {
 // Observe journals the prompt as an event; apply persists the counter as a state
 // and gives the spiral, with what was learned, back as context.
 function onPrompt(workspace, payload, every) {
-  const event = workspace.appendEvent({ type: "prompt", role: "person", session: payload.session_id, data: { text: payload.prompt || "" } });
-  const count = workspace.stateValue(COUNTER, 0) + 1;
-  if (event) workspace.writeState(COUNTER, count, event.id);
-  const additionalContext = buildContext({ relations: workspace.readRelations(), promptsSinceReflection: count, reflectEvery: every });
+  const additionalContext = workspace.mutation(() => {
+    const event = workspace.appendEvent({ type: "prompt", role: "person", session: payload.session_id, data: { text: payload.prompt || "" } });
+    if (!event) throw new Error("The prompt event was refused; see .spiral/rejected.jsonl.");
+    const count = workspace.stateValue(COUNTER, 0) + 1;
+    const errors = workspace.writeState(COUNTER, count, event.id);
+    if (errors.length > 0) throw new Error(`Unable to update ${COUNTER}: ${errors.join("; ")}`);
+    return buildContext({ relations: workspace.readRelations(), promptsSinceReflection: count, reflectEvery: every });
+  });
   return { hookSpecificOutput: { hookEventName: "UserPromptSubmit", additionalContext } };
 }
 
 // The reply is journaled with the intent it stated.
 function onStop(workspace, payload) {
   const text = payload.last_assistant_message || "";
-  workspace.appendEvent({ type: "reply", role: "agent", session: payload.session_id, data: { intent: statedIntent(text), text } });
+  const data = { intent: statedIntent(text), text };
+  workspace.mutation(() => workspace.appendEvent({ type: "reply", role: "agent", session: payload.session_id, data }));
   return null;
 }
 

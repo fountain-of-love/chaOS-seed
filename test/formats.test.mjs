@@ -19,7 +19,7 @@ test("frontmatter written by hand in plain YAML is read too", () => {
 
 test("DOT relations round-trip as weighted directed vectors, quotes included", () => {
   const relations = [
-    { from: 'say "ship it"', type: "follows", to: "run the tests", weight: 2, evidence: ["e-1", "e-2"] },
+    { from: 'say "ship it"', type: "follows", to: "run the \\tests", weight: 2, evidence: ["e-1", "e-2"] },
     { from: "person", type: "prefers", to: "small steps", weight: 5, evidence: ["e-3"], extra: { colour: "red" } },
   ];
   const text = renderDot(relations);
