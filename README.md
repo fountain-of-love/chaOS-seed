@@ -1,9 +1,9 @@
 # chaOS seed
 
 <p align="center">
-  <img src="assets/lowell.jpg" alt="Hurricane Lowell from space on 2 September 2026: a spiral of white cloud around a small, clear eye" width="480">
+  <img src="assets/lisa.png" alt="Hurricane Lisa: a spiral of cloud around a wide, clear eye" width="480">
   <br>
-  <sub>Hurricane Lowell near its Category 5 peak, 2 September 2026, south of Hawaiʻi. Image: <a href="https://worldview.earthdata.nasa.gov">NASA Worldview</a>, NOAA-21 VIIRS.</sub>
+  <sub>Hurricane Lisa near its peak. Image: <a href="https://satlib.cira.colostate.edu">CSU/CIRA &amp; JMA/JAXA</a>, Himawari-9.</sub>
 </p>
 
 Chaos is not merely disorder. It is the space from which patterns emerge. Every interaction leaves a trace. Every trace contributes to a state. Every state creates the possibility of new understanding.
