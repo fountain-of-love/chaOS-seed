@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { Given, Then, When } from "@cucumber/cucumber";
-import { repository } from "../support/world.mjs";
+import { repository } from "../../../support/mjs/world.mjs";
 
 Given("these example records:", function (document) {
   this.records = JSON.parse(document);

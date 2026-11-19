@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { Given, Then, When } from "@cucumber/cucumber";
-import { nodeRuntime } from "../support/world.mjs";
+import { nodeRuntime } from "../../../support/mjs/world.mjs";
 
 const runtimes = {
   node: nodeRuntime,

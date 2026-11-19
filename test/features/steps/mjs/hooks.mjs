@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { Given, Then, When } from "@cucumber/cucumber";
-import { counterKey } from "../support/world.mjs";
+import { counterKey } from "../../../support/mjs/world.mjs";
 
 async function submit(world, prompt, session) {
   world.result = await world.hook("UserPromptSubmit", { prompt, session_id: session });

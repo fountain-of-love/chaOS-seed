@@ -7,14 +7,14 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { After, Before, World, setDefaultTimeout, setWorldConstructor } from "@cucumber/cucumber";
 
-export const repository = fileURLToPath(new URL("../..", import.meta.url));
+export const repository = fileURLToPath(new URL("../../..", import.meta.url));
 export const counterKey = "promptsSinceReflection";
 const runFile = promisify(execFile);
 export const nodeRuntime = {
   executable: process.execPath,
   cli: "bin/spiral.mjs",
   hook: "hooks/spiral-hook.mjs",
-  probe: "test/support/node-probe.mjs",
+  probe: "test/support/mjs/node-probe.mjs",
 };
 
 class WorkspaceWorld extends World {

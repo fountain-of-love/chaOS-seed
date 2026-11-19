@@ -1,13 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import * as contract from "../../src/contract.mjs";
-import { parseDot, parseFrontmatter, renderDot, renderFrontmatter } from "../../src/formats.mjs";
-import { isVariationCheck, ladderStage } from "../../src/growth.mjs";
-import { buildContext, isReflectionDue, reviewJournal, statedIntent, strengthen } from "../../src/spiral.mjs";
-import { openWorkspace } from "../../src/workspace.mjs";
+import * as contract from "../../../src/contract.mjs";
+import { parseDot, parseFrontmatter, renderDot, renderFrontmatter } from "../../../src/formats.mjs";
+import { isVariationCheck, ladderStage } from "../../../src/growth.mjs";
+import { buildContext, isReflectionDue, reviewJournal, statedIntent, strengthen } from "../../../src/spiral.mjs";
+import { openWorkspace } from "../../../src/workspace.mjs";
 
-const root = fileURLToPath(new URL("../..", import.meta.url));
+const root = fileURLToPath(new URL("../../..", import.meta.url));
 const workspace = openWorkspace(process.cwd());
 
 function* sources(directory) {

@@ -1,7 +1,7 @@
-Feature: Runtimes share a workspace
+Feature: Runtimes contribute to a shared workspace
 
-  Scenario: Node.js and Python can alternate without losing state, memory, or context
-    Given I use "node"
+  Scenario Outline: <writer> starts a workspace and <follower> continues it
+    Given I use "<writer>"
     And reflection is due every 2 prompts
     When session "s1" submits the prompt "Relire les tests"
     And session "s1" submits the prompt "Relire les tests"
@@ -12,7 +12,7 @@ Feature: Runtimes share a workspace
       """
       Notes de réflexion.
       """
-    And I use "python"
+    And I use "<follower>"
     When session "s1" submits the prompt "Relire les tests"
     And session "s1" submits the prompt "Relire les tests"
     Then the hook context matches the saved context
@@ -27,12 +27,12 @@ Feature: Runtimes share a workspace
       """json
       {"actor":{"role":"agent","session":"s1"},"data":{"intent":"relire les tests","text":"intent: relire les tests\n\nFini."}}
       """
-    Given I use "node"
+    Given I use "<writer>"
     When I remember this relation citing prompts 1 through 2:
       """json
       ["terminer \"ça\"","follows","relire \\tests"]
       """
-    Given I use "python"
+    Given I use "<follower>"
     When I remember this relation citing prompts 2 through 4:
       """json
       ["terminer \"ça\"","follows","relire \\tests"]
@@ -44,12 +44,17 @@ Feature: Runtimes share a workspace
       | review  |
       | reflect |
       | memory  |
-    Given I use "node"
+    Given I use "<writer>"
     When I submit "Apply learned memory"
     Then the context mentions "4, noticed"
-    Given I use "python"
+    Given I use "<follower>"
     When I run "reflected"
     Then it exits with code 0
-    Given I use "node"
+    Given I use "<writer>"
     When I run "status"
     Then stdout contains "0 of 14 prompts"
+
+    Examples:
+      | writer | follower |
+      | node   | python   |
+      | python | node     |

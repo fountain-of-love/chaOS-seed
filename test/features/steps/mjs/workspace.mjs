@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { Given, Then, When } from "@cucumber/cucumber";
-import { counterKey } from "../support/world.mjs";
+import { counterKey } from "../../../support/mjs/world.mjs";
 
 Given("this prompt history:", async function (table) {
   const events = table.hashes().map(({ id, at, text }) => ({

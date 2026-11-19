@@ -59,9 +59,14 @@ writing to a project. Each runtime serializes its own writers.
 
 ## Tests
 
-The [shared Gherkin scenarios](test/features/shared/) define the expected
-behavior for both runtimes. Edit those feature files once. Each runtime runs
-them with its own test runner and step definitions.
+The [shared Gherkin scenarios](test/features/shared/) are the testing
+blackboard. Either runtime can contribute a behavior by adding or updating
+a scenario. Each runtime is responsible for passing every shared scenario
+with its own test runner and step definitions.
+The bindings live in [`steps/mjs/`](test/features/steps/mjs/) and
+[`steps/py/`](test/features/steps/py/) alongside the feature files.
+Both native suites check their own step directory against the
+[shared module list](test/features/shared/suite_layout.feature).
 
 **Node.js** runs its suite with Cucumber.js.
 
@@ -78,9 +83,17 @@ python3 -m pip install -r test/requirements.txt
 python3 -m behave
 ```
 
-**Interoperability** requires both runtimes. Run `npm run test:interop` to
-check that Node.js and Python can alternate in the same workspace. Set
-`PYTHON` to select a different Python executable for this check.
+**Interoperability** checks the handoff in both directions. Each runtime takes
+a turn creating a workspace, and the other continues it. Either runner can
+execute both examples when both runtimes are available.
+
+```sh
+npm run test:interop
+python3 -m behave test/features/interoperability.feature
+```
+
+Set `PYTHON` for the Node.js runner or `NODE` for the Python runner to select
+a different executable for the other runtime.
 
 ## Where does it's name come from?
 

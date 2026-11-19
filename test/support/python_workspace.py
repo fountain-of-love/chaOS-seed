@@ -1,6 +1,7 @@
 """Temporary workspace and native Python entry points for Behave scenarios."""
 
 import ast
+from dataclasses import dataclass
 from importlib.machinery import BuiltinImporter, FrozenImporter, PathFinder
 from importlib.util import resolve_name
 import json
@@ -16,6 +17,16 @@ from chaos_seed.workspace import Workspace
 
 ROOT = Path(__file__).resolve().parents[2]
 PYTHON_ROOT = ROOT / "python"
+
+
+@dataclass(frozen=True)
+class RuntimeCommands:
+    executable: str
+    cli: Path
+    hook: Path
+
+
+PYTHON_COMMANDS = RuntimeCommands(sys.executable, PYTHON_ROOT / "spiral.py", PYTHON_ROOT / "spiral_hook.py")
 
 
 def external_imports():
@@ -52,8 +63,9 @@ class ScenarioWorkspace:
         self.directory = root / ".spiral"
         self.storage = Workspace(root)
         self.hook_env = {}
+        self.runtime = PYTHON_COMMANDS
 
-    def run(self, *args, stdin=None, overrides=None):
+    def run(self, *args, executable=sys.executable, stdin=None, overrides=None):
         env = {
             **os.environ,
             "CLAUDE_PROJECT_DIR": "",
@@ -64,16 +76,20 @@ class ScenarioWorkspace:
             **(overrides or {}),
         }
         return subprocess.run(
-            [sys.executable, *args], cwd=self.root, env=env, input=stdin,
+            [executable, *args], cwd=self.root, env=env, input=stdin,
             encoding="utf-8", capture_output=True, timeout=10,
         )
 
-    def cli(self, *args):
-        return self.run(str(PYTHON_ROOT / "spiral.py"), *args)
+    def cli(self, *args, runtime=None):
+        commands = self.runtime if runtime is None else runtime
+        return self.run(str(commands.cli), *args, executable=commands.executable)
 
     def hook(self, event, payload):
         stdin = payload if isinstance(payload, str) else json.dumps(payload)
-        return self.run(str(PYTHON_ROOT / "spiral_hook.py"), event, stdin=stdin, overrides=self.hook_env)
+        return self.run(
+            str(self.runtime.hook), event, executable=self.runtime.executable,
+            stdin=stdin, overrides=self.hook_env,
+        )
 
     def file(self, *parts):
         return self.directory.joinpath(*parts)
