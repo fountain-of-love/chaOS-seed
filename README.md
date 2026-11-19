@@ -1,5 +1,7 @@
 # chaOS seed
 
+chaOS exists so that you don’t have to repeat yourself. It learns your routines and preferences, and grows with you.
+
 <p align="center">
   <img src="assets/lisa.png" alt="Hurricane Lisa: a spiral of cloud around a wide, clear eye" width="480">
   <br>
@@ -9,9 +11,10 @@
 Chaos is not merely disorder. It is the space from which patterns emerge. Every interaction leaves a trace. Every trace contributes to a state. Every state creates the possibility of new understanding.
 
 chaOS gives coding agents a way to evolve through experience:
+
 Observe - preserve the living trace of every interaction.
-Apply — carry accumulated experience into the present.
-Learn — discover relations, strengthen connections, and reshape memory.
+Apply - carry accumulated experience into the present.
+Learn - discover relations, strengthen connections, and reshape memory.
 
 Like a living system, it does not simply repeat. It adapts.
 
