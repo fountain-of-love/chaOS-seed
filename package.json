@@ -1,0 +1,10 @@
+{
+  "name": "chaos-seed",
+  "version": "0.1.0",
+  "description": "A tiny hook that lets a coding agent observe, apply and learn by the spiral.",
+  "type": "module",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bin": { "spiral": "./bin/spiral.mjs" },
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node --test test/" }
+}
