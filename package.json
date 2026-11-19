@@ -4,7 +4,17 @@
   "description": "A tiny hook that lets a coding agent observe, apply and learn by the spiral.",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
-  "bin": { "spiral": "./bin/spiral.mjs" },
-  "engines": { "node": ">=20" },
-  "scripts": { "test": "node --test test/" }
+  "bin": {
+    "spiral": "./bin/spiral.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "cucumber-js --config test/cucumber.mjs",
+    "test:interop": "cucumber-js --config test/cucumber.mjs --profile interoperability"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "12.2.0"
+  }
 }

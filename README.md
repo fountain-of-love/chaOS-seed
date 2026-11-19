@@ -32,7 +32,7 @@ A tiny hook that lets a coding agent (Claude Code or Codex) work by a spiral:
 
 Each record type has required elements; see [CONTRACT.md](CONTRACT.md).
 
-No dependencies; Node 20 or later.
+The Node.js runtime requires Node 20 or later and uses only built-in modules.
 
 ## Python version
 
@@ -57,14 +57,30 @@ refers to a `spiral` command, run it through `python3 chaos-seed/python/spiral.p
 Both versions use the same `.spiral/` files. Use one runtime at a time when
 writing to a project. Each runtime serializes its own writers.
 
-The native suites cover the same scenarios and run independently. The
-interoperability test requires both runtimes.
+## Tests
 
-```bash
+The [shared Gherkin scenarios](test/features/shared/) define the expected
+behavior for both runtimes. Edit those feature files once. Each runtime runs
+them with its own test runner and step definitions.
+
+**Node.js** runs its suite with Cucumber.js.
+
+```sh
+npm ci
 npm test
-python3 -m unittest discover -s test -p 'test_python_*.py'
-python3 -m unittest discover -s test -p 'test_interop.py'
 ```
+
+**Python** runs its suite with [Behave](https://behave.readthedocs.io/en/stable/).
+Install the test dependency in your Python environment.
+
+```sh
+python3 -m pip install -r test/requirements.txt
+python3 -m behave
+```
+
+**Interoperability** requires both runtimes. Run `npm run test:interop` to
+check that Node.js and Python can alternate in the same workspace. Set
+`PYTHON` to select a different Python executable for this check.
 
 ## Where does it's name come from?
 
