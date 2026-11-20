@@ -62,43 +62,32 @@ the mirrored modules in `src/mjs/` and `src/py/`.
 Both versions use the same `.spiral/` files. Use one runtime at a time when
 writing to a project. Each runtime serializes its own writers.
 
+chaOS-seed is designed to evolve like a [living organism](docs/living-organism.md).
+
 ## Tests
 
-The [shared Gherkin scenarios](test/features/shared/) are the testing
-blackboard. Either runtime can contribute a behavior by adding or updating
-a scenario. Each runtime is responsible for passing every shared scenario
-with its own test runner and step definitions.
-The bindings live in [`steps/mjs/`](test/features/steps/mjs/) and
-[`steps/py/`](test/features/steps/py/) alongside the feature files.
-Both native suites check their own steps, production modules, and entry points
-against the [shared layout](test/features/shared/suite_layout.feature).
-
-**Node.js** runs its suite with Cucumber.js.
+chaOS-seed owns the [canonical feature files](test/features/). Either
+runtime can contribute by updating those scenarios. Both runners read
+the same feature files from the checkout under test.
 
 ```sh
-npm ci
-npm test
+make test
+CHAOS_TEST_SCOPE=python make test
+make test-node
 ```
 
-**Python** runs its suite with [Behave](https://behave.readthedocs.io/en/stable/).
-Install the test dependency in your Python environment.
+`make test` runs both native suites and both directions of the workspace
+handoff. The other commands run a single native suite. `npm test` and
+`npm run test:interop` continue to select the Node.js native and
+interoperability runs.
 
-```sh
-python3 -m pip install -r test/requirements.txt
-python3 -m behave
-```
+Install the rib's `requirements.txt` into the Python interpreter used for
+tests that need Python. Set `PYTHON` to select that interpreter or `NODE`
+to select Node.js during Python's interoperability run. The test rib
+installs the locked Node.js test dependencies when it needs them.
 
-**Interoperability** checks the handoff in both directions. Each runtime takes
-a turn creating a workspace, and the other continues it. Either runner can
-execute both examples when both runtimes are available.
-
-```sh
-npm run test:interop
-python3 -m behave test/features/interoperability.feature
-```
-
-Set `PYTHON` for the Node.js runner or `NODE` for the Python runner to select
-a different executable for the other runtime.
+See [commit checks and rib configuration](scripts/README.md) for archive
+pins and the carve-out command.
 
 ## Where does it's name come from?
 

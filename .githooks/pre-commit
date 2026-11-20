@@ -1,0 +1,2 @@
+#!/bin/sh
+CHAOS_TEST_SCOPE=all exec make guardrails

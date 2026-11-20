@@ -1,0 +1,2 @@
+# Keep the canonical Gherkin, including features in nested directories.
+features/*.feature
